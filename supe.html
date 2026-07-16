@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BENZ PATENT-MOTORWAGEN — The Genesis of Luxury</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;700&family=Montserrat:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- CORE SYSTEM & VARIABLES --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none !important; /* Hide native cursor for custom liquid lag cursor */
+        }
+
+        :root {
+            --bg-deep: #030303;
+            --bg-surface: #0a0a0a;
+            --bg-card: #0f0f0f;
+            --accent: #c5a880; 
+            --accent-glow: rgba(197, 168, 128, 0.25);
+            --text-main: #ffffff;
+            --text-muted: #7c7c82;
+            --font-serif: 'Cinzel', serif;
+            --font-sans: 'Montserrat', sans-serif;
+            --transition-smooth: all 1s cubic-bezier(0.85, 0, 0.15, 1);
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- MICROSCOPIC DUST BACKGROUND CANVAS --- */
+        #bg-dust-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        /* --- CUSTOM LIQUID MAGNETIC CURSOR --- */
+        .custom-cursor {
+            width: 10px;
+            height: 10px;
+            background: var(--accent);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 10000;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s ease, height 0.3s ease, background-color 0.3s ease;
+        }
+
+        .custom-cursor-ring {
+            width: 40px;
+            height: 40px;
+            border: 1.5px solid var(--accent);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s cubic-bezier(0.25, 1, 0.5, 1), height 0.3s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.3s ease, background-color 0.3s ease;
+        }
+
+        /* Magnetic interactive states */
+        .custom-cursor.hovering {
+            width: 16px;
+            height: 16px;
+            background: #ffffff;
+        }
+
+        .custom-cursor-ring.hovering {
+            width: 70px;
+            height: 70px;
+            border-color: #ffffff;
+            background-color: rgba(197, 168, 128, 0.08);
+        }
+
+        /* --- MULTI-DIRECTION SCROLL CANVAS WRAPPER --- */
+        .page-canvas {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            transition: var(--transition-smooth);
+            will-change: transform;
+            z-index: 2;
+        }
+
+        /* Coordinate Grid Systems */
+        section.panel, header.panel {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center; 
+            justify-content: center;
+            overflow: hidden;
+            perspective: 1200px;
+        }
+
+        #hero { top: 0; left: 0; }
+        #about { top: 0; left: -100vw; } 
+        #metrics { top: 100vh; left: 0; } 
+        #craft { top: 0; left: 100vw; } 
+
+        /* Spatial shifts */
+        body[data-active-panel="hero"] .page-canvas { transform: translate(0, 0); }
+        body[data-active-panel="about"] .page-canvas { transform: translate(100vw, 0); }
+        body[data-active-panel="metrics"] .page-canvas { transform: translate(0, -100vh); }
+        body[data-active-panel="craft"] .page-canvas { transform: translate(-100vw, 0); }
+
+        .container {
+            max-width: 1440px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 0 5rem;
+            margin-top: 5rem; 
+        }
+
+        .serif {
+            font-family: var(--font-serif);
+            font-weight: 400;
+        }
+
+        /* --- ULTIMATE FIXED NAVIGATION --- */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+            padding: 2.5rem 0;
+            backdrop-filter: blur(20px);
+            background: linear-gradient(to bottom, rgba(3,3,3,0.95), rgba(3,3,3,0));
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 0;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            letter-spacing: 8px;
+            color: var(--text-main);
+            text-decoration: none;
+            transition: var(--transition-smooth);
+            font-weight: 700;
+        }
+
+        .logo:hover {
+            color: var(--accent);
+            text-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 4rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            transition: var(--transition-smooth);
+            position: relative;
+            padding-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 1px;
+            background-color: var(--accent);
+            transition: var(--transition-smooth);
+            transform: translateX(-50%);
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--text-main);
+        }
+
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        /* --- PRO HERO PANEL --- */
+        header.panel {
+            background: linear-gradient(rgba(3,3,3,0.4), rgba(3,3,3,0.98)), 
+                        url('https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=1800&q=80') no-repeat center center/cover;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            align-items: flex-end;
+            width: 100%;
+        }
+
+        .hero-title h1 {
+            font-size: clamp(5rem, 12vw, 10rem);
+            line-height: 0.8;
+            letter-spacing: -4px;
+            color: var(--text-main);
+            text-shadow: 0 10px 40px rgba(0,0,0,0.8);
+        }
+
+        .hero-details {
+            max-width: 420px;
+            justify-self: end;
+            border-left: 1px solid rgba(197, 168, 128, 0.4);
+            padding-left: 2.5rem;
+        }
+
+        .hero-details h3 {
+            font-size: 0.85rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .hero-details p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            font-weight: 300;
+            line-height: 1.8;
+            margin-bottom: 2.5rem;
+        }
+
+        /* --- PRO BUTTON STYLING --- */
+        .btn-pro {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            padding: 1.2rem 3rem;
+            background: transparent;
+            color: var(--text-main);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            overflow: hidden;
+            transition: var(--transition-smooth);
+            text-decoration: none;
+            z-index: 1;
+            font-weight: 600;
+        }
+
+        .btn-pro::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--text-main);
+            transform: translateY(100%);
+            transition: var(--transition-smooth);
+            z-index: -1;
+        }
+
+        .btn-pro:hover {
+            color: var(--bg-deep);
+            border-color: var(--text-main);
+            box-shadow: 0 15px 30px rgba(255,255,255,0.08);
+        }
+
+        .btn-pro:hover::before {
+            transform: translateY(0);
+        }
+
+        /* --- EDITORIAL HERITAGE PANEL --- */
+        .editorial-section {
+            background-color: var(--bg-surface);
+        }
+
+        .editorial-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            gap: 7rem;
+            align-items: center;
+            width: 100%;
+        }
+
+        .editorial-left h2 {
+            font-size: clamp(2.2rem, 4.5vw, 3.8rem);
+            line-height: 1.1;
+            margin-bottom: 2.5rem;
+            letter-spacing: -1px;
+        }
+
+        .editorial-left h2 span {
+            color: var(--accent);
+            text-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .img-reveal-wrapper {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 35px 70px rgba(0,0,0,0.6);
+        }
+
+        .img-reveal-wrapper img {
+            width: 100%;
+            height: 420px;
+            object-fit: cover;
+            filter: grayscale(20%) contrast(108%);
+            transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .img-reveal-wrapper:hover img {
+            transform: scale(1.06);
+        }
+
+        .editorial-right {
+            max-width: 460px;
+        }
+
+        .section-tag {
+            font-size: 0.75rem;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            color: var(--accent);
+            display: block;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .editorial-right p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            font-weight: 300;
+            margin-bottom: 2.2rem;
+            line-height: 1.8;
+        }
+
+        /* --- PREMIUM PERFORMANCE METRICS PANEL --- */
+        .stats-section {
+            background-color: var(--bg-deep);
+        }
+
+        .stats-wrapper {
+            width: 100%;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2.5rem;
+        }
+
+        .stat-card {
+            background-color: var(--bg-card);
+            padding: 4rem 3rem;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.01);
+            transition: var(--transition-smooth);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(197, 168, 128, 0.3);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5), 0 0 25px var(--accent-glow);
+        }
+
+        .stat-num-box {
+            display: flex;
+            align-items: baseline;
+            color: var(--accent);
+            margin-bottom: 1.2rem;
+        }
+
+        .stat-number {
+            font-size: clamp(3.2rem, 5.5vw, 5rem);
+            font-weight: 300;
+            line-height: 1;
+        }
+
+        .stat-suffix {
+            font-size: 1.6rem;
+            margin-left: 0.3rem;
+            font-weight: 300;
+        }
+
+        .stat-card p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            line-height: 1.6;
+        }
+
+        /* --- CRAFTSMANSHIP DESIGN SHOWCASE (3D GRID) --- */
+        .showcase-section {
+            background-color: var(--bg-surface);
+            text-align: center;
+        }
+
+        .showcase-wrapper {
+            width: 100%;
+        }
+
+        .showcase-section h2 {
+            font-size: clamp(2.5rem, 5vw, 4.2rem);
+            margin-bottom: 3.5rem;
+            letter-spacing: 2px;
+        }
+
+        .grid-showcase {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+            perspective: 1200px;
+        }
+
+        .showcase-item {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            height: 440px;
+            transform-style: preserve-3d;
+            transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.6s ease;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .showcase-item:hover {
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6), 0 0 30px var(--accent-glow);
+        }
+
+        .showcase-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .showcase-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(3,3,3,0.98), transparent 55%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 3rem;
+            text-align: left;
+            transform: translateZ(40px); /* 3D depth protrusion */
+            transition: var(--transition-smooth);
+        }
+
+        .showcase-overlay h4 {
+            font-size: 1.35rem;
+            margin-bottom: 0.6rem;
+            color: var(--text-main);
+            letter-spacing: 1px;
+        }
+
+        .showcase-overlay p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 300;
+            line-height: 1.5;
+        }
+
+        /* --- ULTIMATE COMPASS HUD RADAR --- */
+        .spatial-hud {
+            position: fixed;
+            bottom: 3.5rem;
+            right: 4.5rem;
+            z-index: 100;
+            background: rgba(10, 10, 10, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 16px;
+            padding: 1.4rem;
+            backdrop-filter: blur(20px);
+            display: flex;
+            align-items: center;
+            gap: 1.8rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+
+        .hud-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 16px);
+            grid-template-rows: repeat(3, 16px);
+            gap: 8px;
+        }
+
+        .hud-dot {
+            width: 100%;
+            height: 100%;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.08);
+            transition: var(--transition-smooth);
+        }
+
+        .hud-dot.pos-about   { grid-row: 2; grid-column: 1; }
+        .hud-dot.pos-hero    { grid-row: 2; grid-column: 2; }
+        .hud-dot.pos-craft   { grid-row: 2; grid-column: 3; }
+        .hud-dot.pos-metrics { grid-row: 3; grid-column: 2; }
+        
+        body[data-active-panel="about"]   .pos-about,
+        body[data-active-panel="hero"]    .pos-hero,
+        body[data-active-panel="craft"]   .pos-craft,
+        body[data-active-panel="metrics"] .pos-metrics {
+            background: var(--accent);
+            box-shadow: 0 0 15px var(--accent);
+        }
+
+        .hud-text {
+            font-family: var(--font-sans);
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--text-muted);
+        }
+
+        .hud-text span {
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        /* Keyboard Indicators */
+        .keyboard-tip {
+            position: fixed;
+            bottom: 4rem;
+            left: 4.5rem;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            opacity: 0.4;
+            transition: var(--transition-smooth);
+        }
+
+        .keyboard-tip:hover {
+            opacity: 1;
+        }
+
+        .key-btn {
+            background: #111112;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 0.7rem;
+            border-radius: 6px;
+            font-family: var(--font-sans);
+            font-size: 0.65rem;
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .tip-txt {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+        }
+
+        /* --- INTERACTIVE SPEC DETAIL PANE --- */
+        .slide-detail-pane {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            background-color: var(--bg-deep);
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .slide-detail-pane.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .pane-image {
+            height: 100vh;
+            width: 100%;
+            object-fit: cover;
+        }
+
+        .pane-content {
+            padding: 8rem 5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            background-color: #060606;
+            border-left: 1px solid rgba(255,255,255,0.03);
+        }
+
+        .pane-tag {
+            font-size: 0.75rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .pane-title {
+            font-size: clamp(2.5rem, 4vw, 4rem);
+            margin-bottom: 2rem;
+            line-height: 1.1;
+        }
+
+        .pane-desc {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            line-height: 1.8;
+            font-weight: 300;
+            margin-bottom: 3rem;
+        }
+
+        .btn-close-pane {
+            position: absolute;
+            top: 3rem;
+            right: 4rem;
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition-smooth);
+        }
+
+        .btn-close-pane:hover {
+            color: var(--accent);
+        }
+
+        /* --- RESPONSIVE SCREEN LAYOUTS --- */
+        @media (max-width: 1200px) {
+            .container { padding: 0 3rem; margin-top: 6rem; }
+            .editorial-grid { grid-template-columns: 1fr; gap: 2rem; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .slide-detail-pane { grid-template-columns: 1fr; }
+            .pane-image { display: none; }
+            .spatial-hud, .keyboard-tip { display: none; }
+            * { cursor: auto !important; }
+            .custom-cursor, .custom-cursor-ring { display: none; }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hero-grid { grid-template-columns: 1fr; gap: 2rem; }
+            .hero-details { justify-self: start; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .grid-showcase { grid-template-columns: 1fr; }
+            .img-reveal-wrapper img { height: 260px; }
+            .pane-content { padding: 5rem 2rem; }
+        }
+    </style>
+</head>
+<body data-active-panel="hero">
+
+    <!-- MICROSCOPIC DUST BACKGROUND CANVAS -->
+    <canvas id="bg-dust-canvas"></canvas>
+
+    <!-- CUSTOM LIQUID MAGNETIC CURSOR -->
+    <div class="custom-cursor" id="cursor-dot"></div>
+    <div class="custom-cursor-ring" id="cursor-ring"></div>
+
+    <!-- NAVIGATION -->
+    <nav>
+        <div class="container nav-container">
+            <a onclick="navigateToPanel('hero')" class="logo serif cursor-trigger">BENZ</a>
+            <ul class="nav-links">
+                <li><a onclick="navigateToPanel('about')" id="nav-about" class="cursor-trigger">Heritage</a></li>
+                <li><a onclick="navigateToPanel('metrics')" id="nav-metrics" class="cursor-trigger">Specifications</a></li>
+                <li><a onclick="navigateToPanel('craft')" id="nav-craft" class="cursor-trigger">Craftsmanship</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- KEYBOARD TIPS -->
+    <div class="keyboard-tip">
+        <div class="key-btn">▲</div>
+        <div class="key-btn">◀</div>
+        <div class="key-btn">▼</div>
+        <div class="key-btn">▶</div>
+        <span class="tip-txt">WASD / ARROWS TO DRIFT</span>
+    </div>
+
+    <!-- SPATIAL HUD SYSTEM -->
+    <div class="spatial-hud">
+        <div class="hud-text">CANVAS POSITION: <span id="active-hud-label">Origin (Hero)</span></div>
+        <div class="hud-grid">
+            <div class="hud-dot pos-about"></div>
+            <div class="hud-dot pos-hero"></div>
+            <div class="hud-dot pos-craft"></div>
+            <div></div> 
+            <div class="hud-dot pos-metrics"></div>
+            <div></div> 
+        </div>
+    </div>
+
+    <!-- MULTI-DIRECTION SCROLL CANVAS WRAPPER -->
+    <div class="page-canvas">
+
+        <!-- PRO HERO (Center Point) -->
+        <header id="hero" class="panel">
+            <div class="container">
+                <div class="hero-grid">
+                    <div class="hero-title">
+                        <h1 class="serif">BENZ</h1>
+                    </div>
+                    <div class="hero-details">
+                        <h3>PATENT-MOTORWAGEN</h3>
+                        <p>The genesis of absolute mobility. A masterfully restored journey celebrating the architecture, complex engineering, and cultural dawn of the world's very first luxury automobile.</p>
+                        <a onclick="navigateToPanel('about')" class="btn-pro cursor-trigger">Explore Heritage</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- EDITORIAL SECTION (Enters from LEFT) -->
+        <section id="about" class="panel editorial-section">
+            <div class="container">
+                <div class="editorial-grid">
+                    <div class="editorial-left">
+                        <span class="section-tag">// The Origin</span>
+                        <h2 class="serif">REWRITING THE OUTLINES OF <span>HUMAN MOTION</span>.</h2>
+                        <div class="img-reveal-wrapper">
+                            <img src="https://images.unsplash.com/photo-1486496146582-9ffcd0b2b2b7?auto=format&fit=crop&w=1200&q=80" alt="Vintage Luxury Mechanical Assets">
+                        </div>
+                    </div>
+                    <div class="editorial-right">
+                        <p>In 1886, Karl Benz introduced a three-wheeled vehicle that permanently broke human reliance on the horse-drawn carriage. Every design node—from the delicate wire-spoked rims to the structural wood seating—was an artistic shift towards modernity.</p>
+                        <p>This luxury dynamic framework established the benchmark engineering DNA that continues to influence elite automotive houses to this day.</p>
+                        <a onclick="navigateToPanel('metrics')" class="btn-pro cursor-trigger">View Mechanics</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PERFORMANCE METRICS SECTION (Enters from BOTTOM) -->
+        <section id="metrics" class="panel stats-section">
+            <div class="container">
+                <div class="stats-wrapper">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-num-box serif">
+                                <span class="stat-number" data-target="400">0</span>
+                                <span class="stat-suffix">rpm</span>
+                            </div>
+                            <p>Optimal operational rhythm engineered into the historic motor unit.</p>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-num-box serif">
+                                <span class="stat-number" data-target="1">0</span>
+                                <span class="stat-suffix">st</span>
+                            </div>
+                            <p>The official global patent registration changing cross-country transit forever.</p>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-num-box serif">
+                                <span class="stat-number" data-target="16">0</span>
+                                <span class="stat-suffix">km/h</span>
+                            </div>
+                            <p>Maximum speed realized across the historic structural test runs.</p>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-num-box serif">
+                                <span class="stat-number" data-target="1886">0</span>
+                            </div>
+                            <p>The monumental year luxury transportation transitioned to internal combustion.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SHOWCASE SECTION WITH INTERACTIVE CLICK SLIDES (Enters from RIGHT) -->
+        <section id="craft" class="panel showcase-section">
+            <div class="container">
+                <div class="showcase-wrapper">
+                    <h2 class="serif">DESIGN ARCHITECTURE</h2>
+                    <div class="grid-showcase">
+                        <!-- Card 1 -->
+                        <div class="showcase-item cursor-trigger" data-tilt onclick="openPane('steel-frame')">
+                            <img src="https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&w=800&q=80" alt="Pioneering Luxury Automotive Chassis">
+                            <div class="showcase-overlay">
+                                <h4 class="serif">The Steel Frame</h4>
+                                <p>Specially formed tubular steel layout mirroring precise luxury coach design.</p>
+                            </div>
+                        </div>
+                        <!-- Card 2 -->
+                        <div class="showcase-item cursor-trigger" data-tilt onclick="openPane('differential')">
+                            <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=800&q=80" alt="Vintage Mechanical Engine Gears">
+                            <div class="showcase-overlay">
+                                <h4 class="serif">Differential Gears</h4>
+                                <p>Brilliantly structured balancing gears ensuring smooth premium handling transitions.</p>
+                            </div>
+                        </div>
+                        <!-- Card 3 -->
+                        <div class="showcase-item cursor-trigger" data-tilt onclick="openPane('cooling')">
+                            <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80" alt="Luxury High-Polish Metal Finish">
+                            <div class="showcase-overlay">
+                                <h4 class="serif">Evaporative Cooling</h4>
+                                <p>Sophisticated organic thermal systems maximizing structural engine preservation.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+    </div>
+
+    <!-- FULL PANEL DYNAMIC SLIDES -->
+    <!-- Slide 1 Detail -->
+    <div id="pane-steel-frame" class="slide-detail-pane">
+        <img class="pane-image" src="https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&w=1200&q=80" alt="Steel Frame Detail">
+        <div class="pane-content">
+            <button class="btn-close-pane cursor-trigger" onclick="closePane('steel-frame')">✕ Close</button>
+            <span class="pane-tag">Specification Architecture</span>
+            <h3 class="serif pane-title">The Steel Frame Layout</h3>
+            <p class="pane-desc">Karl Benz completely reimagined structural dynamics by avoiding heavy structural timbers. Instead, this frame relies entirely on custom-bent tubular steel lines welded with premium artisan nodes. The resulting design was lightweight, beautifully stable, and perfectly mirrored the high-end luxury aesthetic of bespoke late 19th-century coachbuildinghouses.</p>
+            <button class="btn-pro cursor-trigger" onclick="closePane('steel-frame')">Return to Gallery</button>
+        </div>
+    </div>
+
+    <!-- Slide 2 Detail -->
+    <div id="pane-differential" class="slide-detail-pane">
+        <img class="pane-image" src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=1200&q=80" alt="Differential Detail">
+        <div class="pane-content">
+            <button class="btn-close-pane cursor-trigger" onclick="closePane('differential')">✕ Close</button>
+            <span class="pane-tag">Mechanical Integrity</span>
+            <h3 class="serif pane-title">Differential Dynamics</h3>
+            <p class="pane-desc">Navigating tight corners smoothly was once an unsolved mechanical barrier. The design features an exquisite, open counter-balancing differential unit embedded directly onto the primary drive countershaft. This allowed the rear wheels to turn at varying velocities, delivering unparalleled stability and responsive cornering comfort.</p>
+            <button class="btn-pro cursor-trigger" onclick="closePane('differential')">Return to Gallery</button>
+        </div>
+    </div>
+
+    <!-- Slide 3 Detail -->
+    <div id="pane-cooling" class="slide-detail-pane">
+        <img class="pane-image" src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80" alt="Cooling System Detail">
+        <div class="pane-content">
+            <button class="btn-close-pane cursor-trigger" onclick="closePane('cooling')">✕ Close</button>
+            <span class="pane-tag">Thermal Preservation</span>
+            <h3 class="serif pane-title">Evaporative Engineering</h3>
+            <p class="pane-desc">To preserve structural longevity and reduce heavy radiator weight profiles, an innovative open thermo-siphon cooling loop was introduced. By using natural evaporative water mechanics across the main cylinder walls, the engine systematically expelled heat efficiently, laying the core architecture for elite performance engineering.</p>
+            <button class="btn-pro cursor-trigger" onclick="closePane('cooling')">Return to Gallery</button>
+        </div>
+    </div>
+
+    <!-- SCRIPT CONTROLLER -->
+    <script>
+        let currentPanel = 'hero';
+
+        const panelLabels = {
+            'hero': 'Origin (Hero)',
+            'about': 'Heritage (Left)',
+            'metrics': 'Specifications (Bottom)',
+            'craft': 'Craftsmanship (Right)'
+        };
+
+        // --- WEB AUDIO API SYNTH INTEGRATION ---
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        let audioCtx;
+
+        function initAudio() {
+            if (!audioCtx) audioCtx = new AudioCtx();
+        }
+
+        function playSynthSound(freq, duration, type = 'sine') {
+            try {
+                initAudio();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                
+                const osc = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                
+                gainNode.gain.setValueAtTime(0.06, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
+                
+                osc.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch(e) {}
+        }
+
+        // --- ULTIMATE SYNTH NAV FEEDBACK ---
+        function triggerNavSound() {
+            playSynthSound(120, 0.4, 'triangle'); // Warm analog transition hum
+            setTimeout(() => playSynthSound(180, 0.2, 'sine'), 100);
+        }
+
+        function triggerHoverClick() {
+            playSynthSound(800, 0.04, 'sine'); // Clean mechanical snap click
+        }
+
+        // Navigation Controller
+        function navigateToPanel(panelId) {
+            triggerNavSound();
+            currentPanel = panelId;
+            document.body.setAttribute('data-active-panel', panelId);
+            
+            document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+            const targetedLink = document.getElementById(`nav-${panelId}`);
+            if (targetedLink) targetedLink.classList.add('active');
+
+            document.getElementById('active-hud-label').textContent = panelLabels[panelId];
+
+            if (panelId === 'metrics' && !executionTriggered) {
+                initializeCounters();
+                executionTriggered = true;
+            }
+        }
+
+        // --- SPRING-LAG LIQUID MAGNETIC CURSOR ---
+        const cursorDot = document.getElementById('cursor-dot');
+        const cursorRing = document.getElementById('cursor-ring');
+        
+        let mouseX = 0, mouseY = 0;
+        let dotX = 0, dotY = 0;
+        let ringX = 0, ringY = 0;
+
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        function animateCursor() {
+            // Spring dynamics logic
+            dotX += (mouseX - dotX) * 0.25;
+            dotY += (mouseY - dotY) * 0.25;
+            cursorDot.style.left = `${dotX}px`;
+            cursorDot.style.top = `${dotY}px`;
+
+            ringX += (mouseX - ringX) * 0.12; // Lags behind dot for fluid liquid feel
+            ringY += (mouseY - ringY) * 0.12;
+            cursorRing.style.left = `${ringX}px`;
+            cursorRing.style.top = `${ringY}px`;
+
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+
+        // Magnetic link binding
+        const triggers = document.querySelectorAll('.cursor-trigger, a, button, .showcase-item');
+        triggers.forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                cursorDot.classList.add('hovering');
+                cursorRing.classList.add('hovering');
+                triggerHoverClick();
+            });
+            item.addEventListener('mouseleave', () => {
+                cursorDot.classList.remove('hovering');
+                cursorRing.classList.remove('hovering');
+            });
+            item.addEventListener('click', () => {
+                triggerHoverClick();
+            });
+        });
+
+        // --- BACKGROUND COSMIC DUST PARALLAX ---
+        const canvas = document.getElementById('bg-dust-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class DustParticle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 1.5 + 0.5;
+                this.speedX = Math.random() * 0.2 - 0.1;
+                this.speedY = Math.random() * 0.2 - 0.1;
+                this.alpha = Math.random() * 0.5 + 0.1;
+            }
+            update() {
+                this.x += this.speedX + (mouseX - canvas.width/2) * 0.0003; // Drift reacting to mouse
+                this.y += this.speedY + (mouseY - canvas.height/2) * 0.0003;
+                if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+            }
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.fillStyle = '#c5a880';
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = '#c5a880';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        for (let i = 0; i < 120; i++) {
+            particles.push(new DustParticle());
+        }
+
+        function drawDust() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(drawDust);
+        }
+        drawDust();
+
+        // --- KEYBOARD DRIFT CONTROLLER ---
+        window.addEventListener('keydown', (e) => {
+            const activeOverlays = document.querySelectorAll('.slide-detail-pane.active');
+            if (activeOverlays.length > 0) return; 
+
+            switch(e.key) {
+                case 'ArrowLeft':
+                case 'a':
+                case 'A':
+                    if (currentPanel === 'hero') navigateToPanel('about');
+                    else if (currentPanel === 'craft') navigateToPanel('hero');
+                    break;
+                case 'ArrowRight':
+                case 'd':
+                case 'D':
+                    if (currentPanel === 'hero') navigateToPanel('craft');
+                    else if (currentPanel === 'about') navigateToPanel('hero');
+                    break;
+                case 'ArrowDown':
+                case 's':
+                case 'S':
+                    if (currentPanel === 'hero') navigateToPanel('metrics');
+                    break;
+                case 'ArrowUp':
+                case 'w':
+                case 'W':
+                    if (currentPanel === 'metrics') navigateToPanel('hero');
+                    break;
+            }
+        });
+
+        // --- 3D TILT HOVER EFFECTS ---
+        const tiltCards = document.querySelectorAll('[data-tilt]');
+        tiltCards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const xc = rect.width / 2;
+                const yc = rect.height / 2;
+                
+                const angleX = (yc - y) / 10; 
+                const angleY = (x - xc) / 10;
+                
+                card.style.transform = `rotateX(${angleX}deg) rotateY(${angleY}deg) scale(1.03)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = `rotateX(0deg) rotateY(0deg) scale(1)`;
+            });
+        });
+
+        // Detail Pane triggers
+        function openPane(id) {
+            triggerNavSound();
+            document.getElementById(`pane-${id}`).classList.add('active');
+        }
+
+        function closePane(id) {
+            triggerNavSound();
+            document.getElementById(`pane-${id}`).classList.remove('active');
+        }
+
+        // Stats Visual Counter Logic
+        const counters = document.querySelectorAll('.stat-number');
+        let executionTriggered = false;
+
+        function initializeCounters() {
+            counters.forEach(counter => {
+                const targetValue = +counter.getAttribute('data-target');
+                const duration = 2000;
+                const startTime = performance.now();
+
+                function step(currentTime) {
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    const easeProgress = 1 - Math.pow(1 - progress, 3);
+                    
+                    counter.innerText = Math.floor(easeProgress * targetValue);
+
+                    if (progress < 1) {
+                        requestAnimationFrame(step);
+                    } else {
+                        counter.innerText = targetValue;
+                    }
+                }
+                requestAnimationFrame(step);
+            });
+        }
+    </script>
+</body>
+</html>
